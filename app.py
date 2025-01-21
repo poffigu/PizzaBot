@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
 
 
-bot = Bot(token='')
+bot = Bot(token='token')
 dp = Dispatcher()
 
 
@@ -19,6 +19,7 @@ async def echo(message: types.Message) -> None:
 
 
 async def main() -> None:
+    await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
 
