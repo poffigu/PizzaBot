@@ -1,26 +1,22 @@
 import asyncio
+import os
 
-from aiogram import Bot, Dispatcher, types
-from aiogram.filters import CommandStart
+from aiogram import Bot, Dispatcher
+from dotenv import find_dotenv, load_dotenv
+
+from handlers.user_private import user_private_router
 
 
-bot = Bot(token='token')
+load_dotenv(find_dotenv())
+ALLOWED_UPDATES = ['edited_message, message']
+bot = Bot(token=os.getenv('TOKEN'))
 dp = Dispatcher()
-
-
-@dp.message(CommandStart())
-async def start_cmd(message: types.Message) -> None:
-    await message.answer('Команда старт')
-
-
-@dp.message()
-async def echo(message: types.Message) -> None:
-    await message.answer(message.text)
+dp.include_router(user_private_router)
 
 
 async def main() -> None:
-    await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
+    # await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot, allowed_updates=ALLOWED_UPDATES)
 
 
 try:
